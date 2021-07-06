@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.example.samplestickerapp;
+package net.jtattersall.stickers;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -24,21 +24,21 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import static com.example.samplestickerapp.StickerContentProvider.ANDROID_APP_DOWNLOAD_LINK_IN_QUERY;
-import static com.example.samplestickerapp.StickerContentProvider.ANIMATED_STICKER_PACK;
-import static com.example.samplestickerapp.StickerContentProvider.AVOID_CACHE;
-import static com.example.samplestickerapp.StickerContentProvider.IMAGE_DATA_VERSION;
-import static com.example.samplestickerapp.StickerContentProvider.IOS_APP_DOWNLOAD_LINK_IN_QUERY;
-import static com.example.samplestickerapp.StickerContentProvider.LICENSE_AGREENMENT_WEBSITE;
-import static com.example.samplestickerapp.StickerContentProvider.PRIVACY_POLICY_WEBSITE;
-import static com.example.samplestickerapp.StickerContentProvider.PUBLISHER_EMAIL;
-import static com.example.samplestickerapp.StickerContentProvider.PUBLISHER_WEBSITE;
-import static com.example.samplestickerapp.StickerContentProvider.STICKER_FILE_EMOJI_IN_QUERY;
-import static com.example.samplestickerapp.StickerContentProvider.STICKER_FILE_NAME_IN_QUERY;
-import static com.example.samplestickerapp.StickerContentProvider.STICKER_PACK_ICON_IN_QUERY;
-import static com.example.samplestickerapp.StickerContentProvider.STICKER_PACK_IDENTIFIER_IN_QUERY;
-import static com.example.samplestickerapp.StickerContentProvider.STICKER_PACK_NAME_IN_QUERY;
-import static com.example.samplestickerapp.StickerContentProvider.STICKER_PACK_PUBLISHER_IN_QUERY;
+import static net.jtattersall.stickers.StickerContentProvider.ANDROID_APP_DOWNLOAD_LINK_IN_QUERY;
+import static net.jtattersall.stickers.StickerContentProvider.ANIMATED_STICKER_PACK;
+import static net.jtattersall.stickers.StickerContentProvider.AVOID_CACHE;
+import static net.jtattersall.stickers.StickerContentProvider.IMAGE_DATA_VERSION;
+import static net.jtattersall.stickers.StickerContentProvider.IOS_APP_DOWNLOAD_LINK_IN_QUERY;
+import static net.jtattersall.stickers.StickerContentProvider.LICENSE_AGREENMENT_WEBSITE;
+import static net.jtattersall.stickers.StickerContentProvider.PRIVACY_POLICY_WEBSITE;
+import static net.jtattersall.stickers.StickerContentProvider.PUBLISHER_EMAIL;
+import static net.jtattersall.stickers.StickerContentProvider.PUBLISHER_WEBSITE;
+import static net.jtattersall.stickers.StickerContentProvider.STICKER_FILE_EMOJI_IN_QUERY;
+import static net.jtattersall.stickers.StickerContentProvider.STICKER_FILE_NAME_IN_QUERY;
+import static net.jtattersall.stickers.StickerContentProvider.STICKER_PACK_ICON_IN_QUERY;
+import static net.jtattersall.stickers.StickerContentProvider.STICKER_PACK_IDENTIFIER_IN_QUERY;
+import static net.jtattersall.stickers.StickerContentProvider.STICKER_PACK_NAME_IN_QUERY;
+import static net.jtattersall.stickers.StickerContentProvider.STICKER_PACK_PUBLISHER_IN_QUERY;
 
 class StickerPackLoader {
 
@@ -93,26 +93,28 @@ class StickerPackLoader {
     @NonNull
     private static ArrayList<StickerPack> fetchFromContentProvider(Cursor cursor) {
         ArrayList<StickerPack> stickerPackList = new ArrayList<>();
-        cursor.moveToFirst();
-        do {
-            final String identifier = cursor.getString(cursor.getColumnIndexOrThrow(STICKER_PACK_IDENTIFIER_IN_QUERY));
-            final String name = cursor.getString(cursor.getColumnIndexOrThrow(STICKER_PACK_NAME_IN_QUERY));
-            final String publisher = cursor.getString(cursor.getColumnIndexOrThrow(STICKER_PACK_PUBLISHER_IN_QUERY));
-            final String trayImage = cursor.getString(cursor.getColumnIndexOrThrow(STICKER_PACK_ICON_IN_QUERY));
-            final String androidPlayStoreLink = cursor.getString(cursor.getColumnIndexOrThrow(ANDROID_APP_DOWNLOAD_LINK_IN_QUERY));
-            final String iosAppLink = cursor.getString(cursor.getColumnIndexOrThrow(IOS_APP_DOWNLOAD_LINK_IN_QUERY));
-            final String publisherEmail = cursor.getString(cursor.getColumnIndexOrThrow(PUBLISHER_EMAIL));
-            final String publisherWebsite = cursor.getString(cursor.getColumnIndexOrThrow(PUBLISHER_WEBSITE));
-            final String privacyPolicyWebsite = cursor.getString(cursor.getColumnIndexOrThrow(PRIVACY_POLICY_WEBSITE));
-            final String licenseAgreementWebsite = cursor.getString(cursor.getColumnIndexOrThrow(LICENSE_AGREENMENT_WEBSITE));
-            final String imageDataVersion = cursor.getString(cursor.getColumnIndexOrThrow(IMAGE_DATA_VERSION));
-            final boolean avoidCache = cursor.getShort(cursor.getColumnIndexOrThrow(AVOID_CACHE)) > 0;
-            final boolean animatedStickerPack = cursor.getShort(cursor.getColumnIndexOrThrow(ANIMATED_STICKER_PACK)) > 0;
-            final StickerPack stickerPack = new StickerPack(identifier, name, publisher, trayImage, publisherEmail, publisherWebsite, privacyPolicyWebsite, licenseAgreementWebsite, imageDataVersion, avoidCache, animatedStickerPack);
-            stickerPack.setAndroidPlayStoreLink(androidPlayStoreLink);
-            stickerPack.setIosAppStoreLink(iosAppLink);
-            stickerPackList.add(stickerPack);
-        } while (cursor.moveToNext());
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                final String identifier = cursor.getString(cursor.getColumnIndexOrThrow(STICKER_PACK_IDENTIFIER_IN_QUERY));
+                final String name = cursor.getString(cursor.getColumnIndexOrThrow(STICKER_PACK_NAME_IN_QUERY));
+                final String publisher = cursor.getString(cursor.getColumnIndexOrThrow(STICKER_PACK_PUBLISHER_IN_QUERY));
+                final String trayImage = cursor.getString(cursor.getColumnIndexOrThrow(STICKER_PACK_ICON_IN_QUERY));
+                final String androidPlayStoreLink = cursor.getString(cursor.getColumnIndexOrThrow(ANDROID_APP_DOWNLOAD_LINK_IN_QUERY));
+                final String iosAppLink = cursor.getString(cursor.getColumnIndexOrThrow(IOS_APP_DOWNLOAD_LINK_IN_QUERY));
+                final String publisherEmail = cursor.getString(cursor.getColumnIndexOrThrow(PUBLISHER_EMAIL));
+                final String publisherWebsite = cursor.getString(cursor.getColumnIndexOrThrow(PUBLISHER_WEBSITE));
+                final String privacyPolicyWebsite = cursor.getString(cursor.getColumnIndexOrThrow(PRIVACY_POLICY_WEBSITE));
+                final String licenseAgreementWebsite = cursor.getString(cursor.getColumnIndexOrThrow(LICENSE_AGREENMENT_WEBSITE));
+                final String imageDataVersion = cursor.getString(cursor.getColumnIndexOrThrow(IMAGE_DATA_VERSION));
+                final boolean avoidCache = cursor.getShort(cursor.getColumnIndexOrThrow(AVOID_CACHE)) > 0;
+                final boolean animatedStickerPack = cursor.getShort(cursor.getColumnIndexOrThrow(ANIMATED_STICKER_PACK)) > 0;
+                final StickerPack stickerPack = new StickerPack(identifier, name, publisher, trayImage, publisherEmail, publisherWebsite, privacyPolicyWebsite, licenseAgreementWebsite, imageDataVersion, avoidCache, animatedStickerPack);
+                stickerPack.setAndroidPlayStoreLink(androidPlayStoreLink);
+                stickerPack.setIosAppStoreLink(iosAppLink);
+                stickerPackList.add(stickerPack);
+            } while (cursor.moveToNext());
+        }
         return stickerPackList;
     }
 

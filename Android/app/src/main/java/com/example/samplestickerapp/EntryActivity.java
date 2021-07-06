@@ -6,18 +6,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.example.samplestickerapp;
+package net.jtattersall.stickers;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -29,6 +37,48 @@ public class EntryActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (PermissionsHelper.hasStoragePermission(this)) {
+            init();
+        } else {
+            if (PermissionsHelper.isScopedStorage()) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivityForResult(intent, 3030);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 3030);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 3030) {
+            if (PermissionsHelper.hasStoragePermission(this)) {
+                init();
+            } else {
+                showErrorMessage("Storage permission denied");
+                Log.e("EntryActivity", "Permission denied");
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 3030) {
+            if (PermissionsHelper.hasStoragePermission(this)) {
+               init();
+            } else {
+                showErrorMessage("Storage permission denied");
+                Log.e("EntryActivity", "Permission denied");
+            }
+        }
+    }
+
+    private void init() {
         setContentView(R.layout.activity_entry);
         overridePendingTransition(0, 0);
         if (getSupportActionBar() != null) {
@@ -38,6 +88,7 @@ public class EntryActivity extends BaseActivity {
         loadListAsyncTask = new LoadListAsyncTask(this);
         loadListAsyncTask.execute();
     }
+
 
     private void showStickerPack(ArrayList<StickerPack> stickerPackList) {
         progressBar.setVisibility(View.GONE);
