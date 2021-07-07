@@ -29,7 +29,7 @@ class StickerPackValidator {
     private static final int STATIC_STICKER_FILE_LIMIT_KB = 100;
     private static final int ANIMATED_STICKER_FILE_LIMIT_KB = 500;
     static final int EMOJI_MAX_LIMIT = 3;
-    private static final int EMOJI_MIN_LIMIT = 1;
+    private static final int EMOJI_MIN_LIMIT = 0;
     private static final int IMAGE_HEIGHT = 512;
     private static final int IMAGE_WIDTH = 512;
     private static final int STICKER_SIZE_MIN = 3;
